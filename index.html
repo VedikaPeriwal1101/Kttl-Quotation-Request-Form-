@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KTTL Quotation Request</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <header class="header">
+        <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
+        <h1>Quotation Request</h1>
+        <p class="subtext">Submit the customer and product details for quotation approval.</p>
+      </header>
+
+      <form id="quotationForm">
+        <section class="section">
+          <h2>Salesperson Details</h2>
+          <div class="grid two">
+            <label>Salesperson <span>*</span>
+              <select id="salespersonName" required>
+                <option value="">Select salesperson</option>
+                <option>Swapnil</option>
+                <option>Akshay</option>
+                <option>Dhanraj</option>
+                <option>Anuj</option>
+                <option>Kongkon</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Customer Details</h2>
+          <div class="grid two">
+            <label>Company Name <span>*</span>
+              <input id="companyName" required>
+            </label>
+            <label>GST Number
+              <input id="gstNumber">
+            </label>
+            <label>Contact Person <span>*</span>
+              <input id="contactPerson" required>
+            </label>
+            <label>Customer Email <span>*</span>
+              <input id="customerEmail" type="email" required>
+            </label>
+            <label>WhatsApp Number
+              <input id="whatsappNumber" type="tel">
+            </label>
+            <label>State <span>*</span>
+              <input id="state" required>
+            </label>
+          </div>
+          <label>Address <span>*</span>
+            <textarea id="address" rows="3" required></textarea>
+          </label>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <h2>Products</h2>
+            <button type="button" id="addProductBtn" class="secondary">+ Add Product</button>
+          </div>
+          <div id="productsContainer"></div>
+          <div class="totals">
+            <div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
+            <div><span>GST Total</span><strong id="gstTotal">₹0.00</strong></div>
+            <div class="grand"><span>Grand Total</span><strong id="grandTotal">₹0.00</strong></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Quotation Details</h2>
+          <div class="grid two">
+            <label>Payment Terms <span>*</span>
+              <select id="paymentTerms" required>
+                <option value="">Select payment terms</option>
+                <option>Advance</option>
+                <option>15 Days</option>
+                <option>30 Days</option>
+                <option>45 Days</option>
+                <option>60 Days</option>
+              </select>
+            </label>
+            <label>Price Validity
+              <input id="priceValidity" placeholder="e.g. 30 days">
+            </label>
+          </div>
+          <label>Pricing Terms
+            <textarea id="pricingTerms" rows="2"></textarea>
+          </label>
+          <label>Amount in Words
+            <input id="amountInWords" readonly>
+          </label>
+          <label>Remarks
+            <textarea id="remarks" rows="3"></textarea>
+          </label>
+        </section>
+
+        <button class="submit" type="submit">Submit Quotation Request</button>
+        <p id="message" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: #f3f5f8;
+  color: #182230;
+}
+.page { padding: 32px 16px; }
+.card {
+  max-width: 980px;
+  margin: auto;
+  background: #fff;
+  border: 1px solid #e1e6ed;
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(20, 35, 55, .08);
+  overflow: hidden;
+}
+.header { padding: 32px; background: #102a43; color: white; }
+.eyebrow { margin: 0 0 10px; font-size: 12px; letter-spacing: 1px; font-weight: 700; }
+h1 { margin: 0; font-size: 32px; }
+.subtext { margin: 10px 0 0; color: #d9e5f2; }
+form { padding: 28px 32px 34px; }
+.section { padding: 24px 0; border-bottom: 1px solid #e6ebf0; }
+h2 { margin: 0 0 18px; font-size: 19px; }
+.grid { display: grid; gap: 16px; }
+.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+label { display: block; margin-bottom: 16px; font-size: 13px; font-weight: 700; color: #354052; }
+label span { color: #d33; }
+input, select, textarea {
+  width: 100%; margin-top: 7px; padding: 12px;
+  border: 1px solid #cbd5e1; border-radius: 8px;
+  font: inherit; color: #182230; background: #fff;
+}
+textarea { resize: vertical; }
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid #9bc2e8; border-color: #367bb7;
+}
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+button { border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font-weight: 700; }
+.secondary { background: #e7f0f8; color: #174a75; }
+.product-card {
+  border: 1px solid #dbe3ec; border-radius: 12px;
+  padding: 18px; margin-bottom: 14px; background: #fbfcfe;
+}
+.product-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.product-top h3 { margin: 0; font-size: 15px; }
+.remove-btn { padding: 7px 10px; background: #fee2e2; color: #991b1b; font-size: 12px; }
+.product-total { display: flex; justify-content: space-between; font-weight: 700; padding-top: 4px; }
+.totals { margin-top: 20px; margin-left: auto; max-width: 330px; }
+.totals div { display: flex; justify-content: space-between; padding: 7px 0; }
+.totals .grand { border-top: 2px solid #1e293b; margin-top: 8px; padding-top: 12px; font-size: 18px; }
+.submit { width: 100%; margin-top: 28px; background: #146c43; color: white; font-size: 16px; padding: 15px; }
+.submit:disabled { opacity: .6; cursor: wait; }
+#message { text-align: center; margin: 18px 0 0; font-weight: 700; }
+@media (max-width: 650px) {
+  .page { padding: 0; }
+  .card { border-radius: 0; }
+  .header, form { padding: 24px 18px; }
+  .two { grid-template-columns: 1fr; }
+  h1 { font-size: 26px; }
+  .section-heading { align-items: flex-start; flex-direction: column; }
+}
