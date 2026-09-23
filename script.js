@@ -3,7 +3,7 @@
   Replace the URL below with the fresh Custom Webhook URL copied from Make.com.
   In Make, click "Run once" before submitting the form.
 */
-const WEBHOOK_URL = "PASTE_YOUR_MAKE_WEBHOOK_URL_HERE";
+const WEBHOOK_URL = "https://hook.eu1.make.com/hhvgiq4gmav9awsrm6sx3l94nmbfsbei";
 
 const productsContainer = document.getElementById("productsContainer");
 const form = document.getElementById("quotationForm");
@@ -195,7 +195,7 @@ form.addEventListener("submit", async event => {
   message.textContent = "";
 
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_YOUR")) {
-    message.textContent = "Please add your fresh Make webhook URL in script.js.";
+    message.textContent = "https://hook.eu1.make.com/hhvgiq4gmav9awsrm6sx3l94nmbfsbei";
     return;
   }
 
