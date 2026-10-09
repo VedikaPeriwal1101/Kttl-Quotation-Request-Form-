@@ -350,3 +350,42 @@ footer {
     font-size: 16px;
   }
 }
+
+
+/* KTTL Company Logo */
+.company-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.company-logo {
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin: 0 auto 14px;
+  border-radius: 8px;
+}
+
+.company-header h1 {
+  color: #153e75;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.company-header p {
+  color: #667085;
+  font-size: 14px;
+}
+
+@media (max-width: 650px) {
+  .company-logo {
+    width: 78px;
+    height: 78px;
+  }
+
+  .company-header h1 {
+    font-size: 22px;
+  }
+}
