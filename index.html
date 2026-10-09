@@ -27,6 +27,7 @@
                 <option>Dhanraj</option>
                 <option>Anuj</option>
                 <option>Kongkon</option>
+                <!-- ADD THE CLIENT'S NAME HERE, e.g. <option>Their Name</option> -->
               </select>
             </label>
           </div>
@@ -36,22 +37,26 @@
           <h2>Customer Details</h2>
           <div class="grid two">
             <label>Company Name <span>*</span>
-              <input id="companyName" required>
+              <input id="companyName" list="companyList" autocomplete="off" required>
+              <datalist id="companyList"></datalist>
             </label>
             <label>GST Number
               <input id="gstNumber">
             </label>
-            <label>Contact Person <span>*</span>
-              <input id="contactPerson" required>
+            <label>Contact Person
+              <input id="contactPerson">
             </label>
-            <label>Customer Email <span>*</span>
-              <input id="customerEmail" type="email" required>
+            <label>Customer Email
+              <input id="customerEmail" type="email">
             </label>
             <label>WhatsApp Number
               <input id="whatsappNumber" type="tel">
             </label>
-            <label>State <span>*</span>
-              <input id="state" required>
+            <label>State
+              <input id="state">
+            </label>
+            <label>Country
+              <input id="country" value="India">
             </label>
           </div>
           <label>Address <span>*</span>
@@ -65,9 +70,20 @@
             <button type="button" id="addProductBtn" class="secondary">+ Add Product</button>
           </div>
           <div id="productsContainer"></div>
+
+          <label class="rounding">Rounding Off
+            <select id="roundingMode">
+              <option value="none">No rounding</option>
+              <option value="nearest">Round to nearest rupee</option>
+              <option value="up">Round up</option>
+              <option value="down">Round down</option>
+            </select>
+          </label>
+
           <div class="totals">
             <div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
             <div><span>GST Total</span><strong id="gstTotal">₹0.00</strong></div>
+            <div><span>Round Off</span><strong id="roundOff">₹0.00</strong></div>
             <div class="grand"><span>Grand Total</span><strong id="grandTotal">₹0.00</strong></div>
           </div>
         </section>
@@ -83,12 +99,16 @@
                 <option>30 Days</option>
                 <option>45 Days</option>
                 <option>60 Days</option>
+                <option>Others</option>
               </select>
             </label>
             <label>Price Validity
               <input id="priceValidity" placeholder="e.g. 30 days">
             </label>
           </div>
+          <label id="paymentTermsOtherWrap" class="hidden">Custom Payment Terms <span>*</span>
+            <textarea id="paymentTermsOther" rows="2" placeholder="Write the payment condition"></textarea>
+          </label>
           <label>Pricing Terms
             <textarea id="pricingTerms" rows="2"></textarea>
           </label>
