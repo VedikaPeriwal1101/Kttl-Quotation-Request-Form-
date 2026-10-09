@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,86 +13,166 @@
       <header class="header">
         <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
         <h1>Quotation Request</h1>
-        <p class="subtext">Submit the customer and product details for quotation approval.</p>
+        <p class="subtext">
+          Submit the customer and product details for quotation approval.
+        </p>
       </header>
 
       <form id="quotationForm">
+
+        <!-- Salesperson Details -->
         <section class="section">
           <h2>Salesperson Details</h2>
           <div class="grid two">
-            <label>Salesperson <span>*</span>
+            <label>
+              Salesperson <span class="required">*</span>
               <select id="salespersonName" required>
                 <option value="">Select salesperson</option>
-                <option>Swapnil</option>
                 <option>Akshay</option>
-                <option>Dhanraj</option>
                 <option>Anuj</option>
+                <option>Dhanraj</option>
                 <option>Kongkon</option>
-                <!-- ADD THE CLIENT'S NAME HERE, e.g. <option>Their Name</option> -->
+                <option>Swapnil</option>
+                <option>Vijay</option>
               </select>
             </label>
           </div>
         </section>
 
+        <!-- Customer Details -->
         <section class="section">
           <h2>Customer Details</h2>
+
           <div class="grid two">
-            <label>Company Name <span>*</span>
-              <input id="companyName" list="companyList" autocomplete="off" required>
+            <label>
+              Company Name <span class="required">*</span>
+              <input
+                id="companyName"
+                list="companyList"
+                autocomplete="off"
+                required
+              >
               <datalist id="companyList"></datalist>
             </label>
-            <label>GST Number
-              <input id="gstNumber">
+
+            <label>
+              GST Number
+              <input id="gstNumber" autocomplete="off">
             </label>
-            <label>Contact Person
-              <input id="contactPerson">
+
+            <label>
+              Contact Person
+              <input id="contactPerson" autocomplete="name">
             </label>
-            <label>Customer Email
-              <input id="customerEmail" type="email">
+
+            <label>
+              Customer Email
+              <input
+                id="customerEmail"
+                type="email"
+                autocomplete="email"
+              >
             </label>
-            <label>WhatsApp Number
-              <input id="whatsappNumber" type="tel">
+
+            <label>
+              WhatsApp Number
+              <input id="whatsappNumber" type="tel" autocomplete="tel">
             </label>
-            <label>State
-              <input id="state">
+
+            <label>
+              State
+              <input id="state" autocomplete="address-level1">
             </label>
-            <label>Country
-              <input id="country" value="India">
+
+            <label>
+              Country (Domestic / Export)
+              <span class="required">*</span>
+              <input
+                id="country"
+                list="countryList"
+                value="India"
+                autocomplete="country-name"
+                required
+              >
+              <datalist id="countryList">
+                <option value="India"></option>
+                <option value="United Arab Emirates"></option>
+                <option value="Saudi Arabia"></option>
+                <option value="Nepal"></option>
+                <option value="Bangladesh"></option>
+                <option value="Sri Lanka"></option>
+                <option value="United States"></option>
+                <option value="United Kingdom"></option>
+              </datalist>
             </label>
           </div>
-          <label>Address <span>*</span>
+
+          <label>
+            Address <span class="required">*</span>
             <textarea id="address" rows="3" required></textarea>
           </label>
         </section>
 
+        <!-- Products -->
         <section class="section">
           <div class="section-heading">
             <h2>Products</h2>
-            <button type="button" id="addProductBtn" class="secondary">+ Add Product</button>
+            <button
+              type="button"
+              id="addProductBtn"
+              class="secondary"
+            >
+              + Add Product
+            </button>
           </div>
+
+          <p class="helper">
+            Select a product to automatically populate its HSN code
+            and GST rate. Verify the details before submitting.
+          </p>
+
           <div id="productsContainer"></div>
 
-          <label class="rounding">Rounding Off
+          <label class="rounding">
+            Rounding Off
             <select id="roundingMode">
               <option value="none">No rounding</option>
-              <option value="nearest">Round to nearest rupee</option>
-              <option value="up">Round up</option>
-              <option value="down">Round down</option>
+              <option value="nearest">
+                Round to nearest rupee (₹0.50 and above rounds up)
+              </option>
             </select>
           </label>
 
           <div class="totals">
-            <div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
-            <div><span>GST Total</span><strong id="gstTotal">₹0.00</strong></div>
-            <div><span>Round Off</span><strong id="roundOff">₹0.00</strong></div>
-            <div class="grand"><span>Grand Total</span><strong id="grandTotal">₹0.00</strong></div>
+            <div>
+              <span>Subtotal</span>
+              <strong id="subtotal">₹0.00</strong>
+            </div>
+
+            <div>
+              <span>GST Total</span>
+              <strong id="gstTotal">₹0.00</strong>
+            </div>
+
+            <div>
+              <span>Round Off</span>
+              <strong id="roundOff">₹0.00</strong>
+            </div>
+
+            <div class="grand">
+              <span>Grand Total</span>
+              <strong id="grandTotal">₹0.00</strong>
+            </div>
           </div>
         </section>
 
+        <!-- Quotation Details -->
         <section class="section">
           <h2>Quotation Details</h2>
+
           <div class="grid two">
-            <label>Payment Terms <span>*</span>
+            <label>
+              Payment Terms <span class="required">*</span>
               <select id="paymentTerms" required>
                 <option value="">Select payment terms</option>
                 <option>Advance</option>
@@ -102,29 +183,47 @@
                 <option>Others</option>
               </select>
             </label>
-            <label>Price Validity
+
+            <label>
+              Price Validity
               <input id="priceValidity" placeholder="e.g. 30 days">
             </label>
           </div>
-          <label id="paymentTermsOtherWrap" class="hidden">Custom Payment Terms <span>*</span>
-            <textarea id="paymentTermsOther" rows="2" placeholder="Write the payment condition"></textarea>
+
+          <label id="paymentTermsOtherWrap" class="hidden">
+            Custom Payment Terms <span class="required">*</span>
+            <textarea
+              id="paymentTermsOther"
+              rows="2"
+              placeholder="Enter the custom payment condition"
+            ></textarea>
           </label>
-          <label>Pricing Terms
+
+          <label>
+            Pricing Terms
             <textarea id="pricingTerms" rows="2"></textarea>
           </label>
-          <label>Amount in Words
+
+          <label>
+            Amount in Words
             <input id="amountInWords" readonly>
           </label>
-          <label>Remarks
+
+          <label>
+            Remarks
             <textarea id="remarks" rows="3"></textarea>
           </label>
         </section>
 
-        <button class="submit" type="submit">Submit Quotation Request</button>
-        <p id="message" role="status"></p>
+        <button class="submit" type="submit">
+          Submit Quotation Request
+        </button>
+
+        <p id="message" role="status" aria-live="polite"></p>
       </form>
     </section>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
