@@ -1,7 +1,7 @@
 /*
   IMPORTANT:
-  Replace the URL below with the fresh Custom Webhook URL copied from Make.com.
-  In Make, click "Run once" before submitting the form.
+  Keep the existing Make.com Custom Webhook URL. If you replace the webhook in Make,
+  paste the new URL here and run the scenario once before testing.
 */
 const WEBHOOK_URL = "https://hook.eu1.make.com/fmk46trwit4ymlryita3gg3lik8wvsuc";
 
@@ -12,48 +12,55 @@ const submitButton = form.querySelector('button[type="submit"]');
 
 let productCounter = 0;
 
-const productOptions = [
-  "Geocell",
-  "Non Woven Geotextile",
-  "Woven Geotextile",
-  "Pavement Fabrics",
-  "Geodrains",
-  "Geocontainers",
-  "Other"
-];
-
-/* ------------------------------------------------------------------
-   UNITS
-   Replace / extend once KTTL sends their list.
-------------------------------------------------------------------- */
-const unitOptions = ["Sq. Mtrs", "Piece", "Running Mtrs", "Kg", "Roll", "Set", "Nos"];
-
-/* ------------------------------------------------------------------
-   PRODUCT -> HSN LOOKUP
-   TEST VALUES ONLY. Replace with the real table from KTTL.
-   "gst" is optional: if present, it fills the GST % automatically.
-------------------------------------------------------------------- */
+/*
+  Product names and HSN/GST mappings supplied for this form.
+  Note: the source list showed "5 6031400"; this is entered as 56031400,
+  removing the apparent spacing typo. Please verify against KTTL's official list.
+*/
 const PRODUCT_HSN = {
-  "Geocell":              { hsn: "TEST-1001", gst: 18 },
-  "Non Woven Geotextile": { hsn: "TEST-1002", gst: 18 },
-  "Woven Geotextile":     { hsn: "TEST-1003", gst: 18 },
-  "Pavement Fabrics":     { hsn: "TEST-1004", gst: 18 },
-  "Geodrains":            { hsn: "TEST-1005", gst: 18 },
-  "Geocontainers":        { hsn: "TEST-1006", gst: 18 }
+  "Woven Geotextile": { hsn: "54077110", gst: 5 },
+  "Nonwoven Geotextile Below 150 GSM": { hsn: "56031300", gst: 5 },
+  "Nonwoven Geotextile 150 GSM & Above": { hsn: "56031400", gst: 5 },
+  "PET Geogrid": { hsn: "59119090", gst: 5 },
+  "Geostrip": { hsn: "59119090", gst: 5 },
+  "Claytex": { hsn: "591190", gst: 5 },
+  "Nonwoven Geobag/Geocontainer": { hsn: "59119039", gst: 5 },
+  "Woven Geobag/Geocontainer": { hsn: "63059000", gst: 18 },
+  "Geodrain / Geocomposite": { hsn: "39269099", gst: 18 },
+  "HDPE Liner": { hsn: "39201012", gst: 18 },
+  "Geocell": { hsn: "39269080", gst: 18 },
+  "PP Geogrid": { hsn: "39269080", gst: 18 }
 };
 
-// Dropdown list of all HSN codes (built from the table above)
+const productOptions = Object.keys(PRODUCT_HSN);
 const hsnOptions = [...new Set(Object.values(PRODUCT_HSN).map(item => item.hsn))];
 
-/* ------------------------------------------------------------------
-   EXISTING CUSTOMERS (temporary, manual list)
-   When a company name matches, the other fields fill automatically.
-   Later this will be replaced by a lookup from the Google Sheet.
-   Example entry:
-   { companyName: "ABC Infra Pvt Ltd", gstNumber: "27XXXXXXXXXXXXX", address: "Full address",
-     state: "Maharashtra", country: "India", contactPerson: "Name",
-     email: "name@abc.com", whatsappNumber: "9999999999" }
-------------------------------------------------------------------- */
+/*
+  These are common units relevant to technical-textile/geosynthetic quotations.
+  KTTL can refine the list to match its official commercial practice.
+*/
+const unitOptions = [
+  "Sq. Mtrs",
+  "Sq. Ft",
+  "Running Mtrs",
+  "Mtrs",
+  "Piece",
+  "Nos",
+  "Kg",
+  "Metric Ton",
+  "Roll",
+  "Sheet",
+  "Panel",
+  "Bag",
+  "Set",
+  "Bundle",
+  "Lot"
+];
+
+/*
+  Customer autofill placeholder. Keep empty until existing customer records
+  are available or a Google Sheets lookup is connected.
+*/
 const CUSTOMERS = [];
 
 function money(value) {
@@ -94,12 +101,12 @@ function numberToIndianWords(value) {
 }
 
 function applyRounding(total, mode) {
-  const value = Math.round(total * 100) / 100; // avoids floating point glitches
-  let rounded = value;
-  if (mode === "nearest") rounded = Math.round(value);
-  if (mode === "up") rounded = Math.ceil(value);
-  if (mode === "down") rounded = Math.floor(value);
-  return { rounded, roundOff: Math.round((rounded - value) * 100) / 100 };
+  const value = Math.round((Number(total) + Number.EPSILON) * 100) / 100;
+  const rounded = mode === "nearest" ? Math.floor(value + 0.5) : value;
+  return {
+    rounded,
+    roundOff: Math.round((rounded - value + Number.EPSILON) * 100) / 100
+  };
 }
 
 function addProduct() {
@@ -115,14 +122,15 @@ function addProduct() {
       <button type="button" class="remove-btn">Remove</button>
     </div>
     <div class="grid two">
-      <label>Product Name <span>*</span>
+      <label>Product Name <span class="required">*</span>
         <select class="product-name" required>
           <option value="">Select product</option>
           ${productOptions.map(product => `<option value="${product}">${product}</option>`).join("")}
+          <option value="Other">Other (enter details in specification)</option>
         </select>
       </label>
       <label>Specification
-        <input class="specification" placeholder="Enter specification">
+        <input class="specification" placeholder="Enter grade, GSM, dimensions, etc.">
       </label>
       <label>HSN Code
         <select class="hsn-code">
@@ -130,41 +138,48 @@ function addProduct() {
           ${hsnOptions.map(code => `<option value="${code}">${code}</option>`).join("")}
         </select>
       </label>
-      <label>Unit <span>*</span>
+      <label>Unit <span class="required">*</span>
         <select class="unit" required>
           <option value="">Select unit</option>
           ${unitOptions.map(unit => `<option value="${unit}">${unit}</option>`).join("")}
         </select>
       </label>
-      <label>Quantity <span>*</span>
-        <input class="quantity" type="number" min="0" step="any" required>
+      <label>Quantity <span class="required">*</span>
+        <input class="quantity" type="number" min="0.000001" step="any" required>
       </label>
-      <label>Rate (₹) <span>*</span>
+      <label>Rate (₹) <span class="required">*</span>
         <input class="rate" type="number" min="0" step="any" required>
       </label>
       <label>GST (%)
-        <input class="gst-rate" type="number" min="0" step="any" value="18">
+        <input class="gst-rate" type="number" min="0" step="any" value="0">
       </label>
     </div>
     <div class="product-total">
-      <span>Product Total</span>
+      <span>Product Total (incl. GST)</span>
       <span class="line-total">₹0.00</span>
     </div>
   `;
 
   card.querySelector(".remove-btn").addEventListener("click", () => {
     card.remove();
+    refreshProductHeadings();
     refreshTotals();
   });
 
-  // Auto-fill HSN (and GST %) when a product is selected
   card.querySelector(".product-name").addEventListener("change", event => {
     const match = PRODUCT_HSN[event.target.value];
+    const hsnSelect = card.querySelector(".hsn-code");
+    const gstInput = card.querySelector(".gst-rate");
+
     if (match) {
-      card.querySelector(".hsn-code").value = match.hsn;
-      if (match.gst !== undefined) card.querySelector(".gst-rate").value = match.gst;
+      hsnSelect.value = match.hsn;
+      gstInput.value = match.gst;
+    } else if (event.target.value === "Other") {
+      hsnSelect.value = "";
+      gstInput.value = 0;
     } else {
-      card.querySelector(".hsn-code").value = "";
+      hsnSelect.value = "";
+      gstInput.value = 0;
     }
     refreshTotals();
   });
@@ -175,7 +190,14 @@ function addProduct() {
   });
 
   productsContainer.appendChild(card);
+  refreshProductHeadings();
   refreshTotals();
+}
+
+function refreshProductHeadings() {
+  productsContainer.querySelectorAll(".product-card").forEach((card, index) => {
+    card.querySelector(".product-top h3").textContent = `Product ${index + 1}`;
+  });
 }
 
 function getProducts() {
@@ -237,7 +259,7 @@ function refreshTotals() {
   document.getElementById("amountInWords").value = numberToIndianWords(totals.grandTotal);
 }
 
-/* ---------- Payment terms: "Others" ---------- */
+/* Payment terms: show custom conditions only when "Others" is selected. */
 const paymentTermsSelect = document.getElementById("paymentTerms");
 const paymentTermsOtherWrap = document.getElementById("paymentTermsOtherWrap");
 const paymentTermsOther = document.getElementById("paymentTermsOther");
@@ -250,17 +272,17 @@ function togglePaymentOther() {
 }
 paymentTermsSelect.addEventListener("change", togglePaymentOther);
 
-/* ---------- Customer auto-fill ---------- */
+/* Customer autofill placeholder: this will work once the customer list is populated. */
 const companyInput = document.getElementById("companyName");
 const companyList = document.getElementById("companyList");
 
 companyList.innerHTML = CUSTOMERS
-  .map(customer => `<option value="${customer.companyName}"></option>`)
+  .map(customer => `<option value="${String(customer.companyName).replace(/"/g, "&quot;")}"></option>`)
   .join("");
 
 companyInput.addEventListener("change", () => {
-  const match = CUSTOMERS.find(
-    customer => customer.companyName.toLowerCase() === companyInput.value.trim().toLowerCase()
+  const match = CUSTOMERS.find(customer =>
+    customer.companyName.toLowerCase() === companyInput.value.trim().toLowerCase()
   );
   if (!match) return;
 
@@ -314,9 +336,11 @@ function formToObject() {
 form.addEventListener("submit", async event => {
   event.preventDefault();
   message.textContent = "";
+  message.className = "";
 
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_YOUR")) {
     message.textContent = "Please add your fresh Make webhook URL in script.js.";
+    message.classList.add("error");
     return;
   }
 
@@ -324,6 +348,17 @@ form.addEventListener("submit", async event => {
 
   if (payload.products.length === 0) {
     message.textContent = "Please add at least one product.";
+    message.classList.add("error");
+    return;
+  }
+
+  const invalidProduct = payload.products.find(product =>
+    !product.productName || !product.unit || !(product.quantity > 0) ||
+    product.rate < 0 || !Number.isFinite(product.quantity) || !Number.isFinite(product.rate)
+  );
+  if (invalidProduct) {
+    message.textContent = "Please complete each product's name, unit, quantity and rate.";
+    message.classList.add("error");
     return;
   }
 
@@ -344,14 +379,17 @@ form.addEventListener("submit", async event => {
     }
 
     message.textContent = "Quotation request submitted successfully.";
+    message.classList.add("success");
     form.reset();
     togglePaymentOther();
     productsContainer.innerHTML = "";
     productCounter = 0;
+    document.getElementById("country").value = "India";
     addProduct();
   } catch (error) {
     console.error("Make webhook error:", error);
     message.textContent = "Submission failed. Check the Make webhook URL and scenario.";
+    message.classList.add("error");
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = "Submit Quotation Request";
