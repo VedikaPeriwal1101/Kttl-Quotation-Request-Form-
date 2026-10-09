@@ -223,21 +223,34 @@ function getProducts() {
   });
 }
 
+
 function calculateTotals() {
   const products = getProducts();
-  const subtotal = products.reduce((sum, item) => sum + item.taxableAmount, 0);
-  const gstTotal = products.reduce((sum, item) => sum + item.gstAmount, 0);
+
+  const subtotal = products.reduce(
+    (sum, item) => sum + item.taxableAmount,
+    0
+  );
+
+  const gstTotal = products.reduce(
+    (sum, item) => sum + item.gstAmount,
+    0
+  );
+
   const grandTotalBeforeRounding = subtotal + gstTotal;
-  const roundingMode = document.getElementById("roundingMode").value;
-  const { rounded, roundOff } = applyRounding(grandTotalBeforeRounding, roundingMode);
+
+  // Round to the nearest rupee:
+  // ₹14.40 → ₹14; ₹14.50 → ₹15
+  const grandTotal = Math.floor(grandTotalBeforeRounding + 0.5);
+  const roundOff = grandTotal - grandTotalBeforeRounding;
 
   return {
     subtotal,
     gstTotal,
     grandTotalBeforeRounding,
-    roundingMode,
+    roundingMode: "nearest",
     roundOff,
-    grandTotal: rounded
+    grandTotal
   };
 }
 
