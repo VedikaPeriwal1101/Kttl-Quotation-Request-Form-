@@ -2,246 +2,287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KTTL Quotation Request</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KTTL | Quotation Request</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="page">
-    <section class="card">
-     
-<header class="company-header">
-  <img
-    src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png"
-    alt="Khator Technical Textile Limited Logo"
-    class="company-logo"
-  />
+  <main class="page-shell">
+    <header class="brand-header">
+      <div class="brand-logo">
+        <img src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png" alt="KTTL logo"
+             onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block';" />
+        <span id="logoFallback" class="logo-fallback">KTTL</span>
+      </div>
+      <div class="brand-copy">
+        <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
+        <h1>Quotation Request</h1>
+        <p class="subtitle">Submit customer requirements for quotation preparation.</p>
+      </div>
+    </header>
 
-  <h1>Khator Technical Textile Limited</h1>
-  <p>Quotation / Proforma Invoice Request Form</p>
-</header>
-
-      <form id="quotationForm">
-
-        <!-- Salesperson Details -->
-        <section class="section">
-          <h2>Salesperson Details</h2>
-          <div class="grid two">
-            <label>
-              Salesperson <span class="required">*</span>
-              <select id="salespersonName" required>
-                <option value="">Select salesperson</option>
-                <option>Akshay</option>
-                <option>Anuj</option>
-                <option>Dhanraj</option>
-                <option>Kongkon</option>
-                <option>Swapnil</option>
-                <option>Vijay</option>
-              </select>
-            </label>
+    <form id="quotationForm">
+      <section class="section-card">
+        <div class="section-heading">
+          <span class="section-number">01</span>
+          <div>
+            <h2>Sales Information</h2>
+            <p>Tell us who is submitting this request.</p>
           </div>
-        </section>
+        </div>
 
-        <!-- Customer Details -->
-        <section class="section">
-          <h2>Customer Details</h2>
-
-          <div class="grid two">
-            <label>
-              Company Name <span class="required">*</span>
-              <input
-                id="companyName"
-                list="companyList"
-                autocomplete="off"
-                required
-              >
-              <datalist id="companyList"></datalist>
-            </label>
-
-            <label>
-              GST Number
-              <input id="gstNumber" autocomplete="off">
-            </label>
-
-            <label>
-              Contact Person
-              <input id="contactPerson" autocomplete="name">
-            </label>
-
-            <label>
-              Customer Email
-              <input
-                id="customerEmail"
-                type="email"
-                autocomplete="email"
-              >
-            </label>
-
-            <label>
-              WhatsApp Number
-              <input id="whatsappNumber" type="tel" autocomplete="tel">
-            </label>
-
-            <label>
-              State
-              <input id="state" autocomplete="address-level1">
-            </label>
-
-            <label>
-              Country (Domestic / Export)
-              <span class="required">*</span>
-              <input
-                id="country"
-                list="countryList"
-                value="India"
-                autocomplete="country-name"
-                required
-              >
-              <datalist id="countryList">
-                <option value="India"></option>
-                <option value="United Arab Emirates"></option>
-                <option value="Saudi Arabia"></option>
-                <option value="Nepal"></option>
-                <option value="Bangladesh"></option>
-                <option value="Sri Lanka"></option>
-                <option value="United States"></option>
-                <option value="United Kingdom"></option>
-              </datalist>
-            </label>
-          </div>
-
-          <label>
-            Address <span class="required">*</span>
-            <textarea id="address" rows="3" required></textarea>
-          </label>
-        </section>
-
-        <!-- Products -->
-        <section class="section">
-          <div class="section-heading">
-            <h2>Products</h2>
-            <button
-              type="button"
-              id="addProductBtn"
-              class="secondary"
-            >
-              + Add Product
-            </button>
-          </div>
-
-          <p class="helper">
-            Select a product to automatically populate its HSN code
-            and GST rate. Verify the details before submitting.
-          </p>
-
-          <div id="productsContainer"></div>
-
-          <label class="rounding">
-            Rounding Off
-            <select id="roundingMode">
-              <option value="none">No rounding</option>
-              <option value="nearest">
-                Round to nearest rupee (₹0.50 and above rounds up)
-              </option>
+        <div class="form-grid">
+          <div class="field">
+            <label for="salespersonName">Salesperson <span class="required">*</span></label>
+            <select id="salespersonName" name="salespersonName" required>
+              <option value="">Select salesperson</option>
+              <option>Akshay</option>
+              <option>Anuj</option>
+              <option>Dhanraj</option>
+              <option>Kongkon</option>
+              <option>Swapnil</option>
+              <option>Vijay</option>
             </select>
-          </label>
-          
-<div class="totals">
-  <div>
-    <span>Subtotal</span>
-    <strong id="subtotal">₹0.00</strong>
-  </div>
-  <div>
-    <span>GST Total</span>
-    <strong id="gstTotal">₹0.00</strong>
-  </div>
-  <div class="grand">
-    <span>Grand Total</span>
-    <strong id="grandTotal">₹0.00</strong>
-  </div>
-</div>
-
-          <div class="totals">
-            <div>
-              <span>Subtotal</span>
-              <strong id="subtotal">₹0.00</strong>
-            </div>
-
-            <div>
-              <span>GST Total</span>
-              <strong id="gstTotal">₹0.00</strong>
-            </div>
-
-            <div>
-              <span>Round Off</span>
-              <strong id="roundOff">₹0.00</strong>
-            </div>
-
-            <div class="grand">
-              <span>Grand Total</span>
-              <strong id="grandTotal">₹0.00</strong>
-            </div>
           </div>
-        </section>
+          <div class="field">
+            <label for="requestDate">Request Date</label>
+            <input id="requestDate" type="text" readonly />
+          </div>
+        </div>
+      </section>
 
-        <!-- Quotation Details -->
-        <section class="section">
-          <h2>Quotation Details</h2>
+      <section class="section-card">
+        <div class="section-heading">
+          <span class="section-number">02</span>
+          <div>
+            <h2>Customer Information</h2>
+            <p>Enter the customer's company and contact details.</p>
+          </div>
+        </div>
 
-          <div class="grid two">
-            <label>
-              Payment Terms <span class="required">*</span>
-              <select id="paymentTerms" required>
-                <option value="">Select payment terms</option>
-                <option>Advance</option>
-                <option>15 Days</option>
-                <option>30 Days</option>
-                <option>45 Days</option>
-                <option>60 Days</option>
-                <option>Others</option>
-              </select>
-            </label>
-
-            <label>
-              Price Validity
-              <input id="priceValidity" placeholder="e.g. 30 days">
-            </label>
+        <div class="form-grid">
+          <div class="field full-width">
+            <label for="companyName">Company / Customer Name <span class="required">*</span></label>
+            <input id="companyName" name="companyName" list="companyList"
+                   autocomplete="organization" required placeholder="Enter company name" />
+            <datalist id="companyList"></datalist>
           </div>
 
-          <label id="paymentTermsOtherWrap" class="hidden">
-            Custom Payment Terms <span class="required">*</span>
-            <textarea
-              id="paymentTermsOther"
-              rows="2"
-              placeholder="Enter the custom payment condition"
-            ></textarea>
-          </label>
+          <div class="field">
+            <label for="gstNumber">GST Number</label>
+            <input id="gstNumber" name="gstNumber" placeholder="Enter GST number" />
+          </div>
+          <div class="field">
+            <label for="contactPerson">Contact Person</label>
+            <input id="contactPerson" name="contactPerson"
+                   autocomplete="name" placeholder="Enter contact person" />
+          </div>
 
-          <label>
-            Pricing Terms
-            <textarea id="pricingTerms" rows="2"></textarea>
-          </label>
+          <div class="field">
+            <label for="customerEmail">Customer Email</label>
+            <input id="customerEmail" name="customerEmail" type="email"
+                   autocomplete="email" placeholder="name@company.com" />
+          </div>
+          <div class="field">
+            <label for="whatsappNumber">WhatsApp / Phone <span class="required">*</span></label>
+            <input id="whatsappNumber" name="whatsappNumber" type="tel"
+                   autocomplete="tel" required placeholder="Include country code if possible" />
+          </div>
 
-          <label>
-            Amount in Words
-            <input id="amountInWords" readonly>
-          </label>
+          <div class="field">
+            <label for="country">Country <span class="required">*</span></label>
+            <select id="country" name="country" required></select>
+          </div>
+          <div class="field">
+            <label for="state">State / Province</label>
+            <input id="state" name="state" placeholder="Enter state or province" />
+          </div>
 
-          <label>
-            Remarks
-            <textarea id="remarks" rows="3"></textarea>
-          </label>
-        </section>
+          <div class="field full-width">
+            <label for="address">Billing Address <span class="required">*</span></label>
+            <textarea id="address" name="address" rows="3"
+                      required placeholder="Enter complete billing address"></textarea>
+          </div>
+        </div>
+      </section>
 
-        <button class="submit" type="submit">
+      <section class="section-card">
+        <div class="section-heading">
+          <span class="section-number">03</span>
+          <div>
+            <h2>Product Details</h2>
+            <p>Add one or more products. HSN and GST values fill automatically when a product is selected and remain editable.</p>
+          </div>
+        </div>
+
+        <div id="productsContainer"></div>
+        <button type="button" id="addProductBtn" class="button button-secondary">
+          + Add Another Product
+        </button>
+      </section>
+
+      <section class="section-card">
+        <div class="section-heading">
+          <span class="section-number">04</span>
+          <div>
+            <h2>Quotation Terms</h2>
+            <p>Specify the commercial terms requested by the customer.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="paymentTerms">Payment Terms <span class="required">*</span></label>
+            <select id="paymentTerms" name="paymentTerms" required>
+              <option value="">Select payment terms</option>
+              <option value="Advance">Advance</option>
+              <option value="15 Days">15 Days</option>
+              <option value="30 Days">30 Days</option>
+              <option value="45 Days">45 Days</option>
+              <option value="60 Days">60 Days</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+
+          <div class="field hidden" id="paymentTermsOtherWrap">
+            <label for="paymentTermsOther">Custom Payment Conditions <span class="required">*</span></label>
+            <input id="paymentTermsOther" name="paymentTermsOther"
+                   placeholder="Describe payment conditions" />
+          </div>
+
+          <div class="field">
+            <label for="priceValidity">Price Validity</label>
+            <input id="priceValidity" name="priceValidity"
+                   placeholder="e.g. 30 days from quotation date" />
+          </div>
+
+          <div class="field full-width">
+            <label for="pricingTerms">Pricing / Delivery Terms</label>
+            <textarea id="pricingTerms" name="pricingTerms" rows="2"
+                      placeholder="e.g. Ex-works, freight extra, delivery timeline"></textarea>
+          </div>
+
+          <div class="field full-width">
+            <label for="remarks">Additional Remarks</label>
+            <textarea id="remarks" name="remarks" rows="3"
+                      placeholder="Any special requirements or instructions"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card totals-card">
+        <div class="section-heading">
+          <span class="section-number">05</span>
+          <div>
+            <h2>Quotation Summary</h2>
+            <p>Totals update automatically as you edit the product details.</p>
+          </div>
+        </div>
+
+        <div class="totals-panel">
+          <div class="total-row">
+            <span>Taxable Subtotal</span>
+            <strong id="subtotal">₹0.00</strong>
+          </div>
+          <div class="total-row">
+            <span>Total GST</span>
+            <strong id="gstTotal">₹0.00</strong>
+          </div>
+          <div class="total-row grand-total">
+            <span>Grand Total (Rounded)</span>
+            <strong id="grandTotal">₹0</strong>
+          </div>
+          <p class="rounding-note">Grand total is rounded automatically to the nearest rupee.</p>
+          <div class="amount-words">
+            <span>Amount in Words</span>
+            <strong id="amountInWords">Rupees Zero Only</strong>
+          </div>
+        </div>
+      </section>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+
+      <div class="form-actions">
+        <button type="reset" class="button button-outline" id="resetBtn">Clear Form</button>
+        <button type="submit" class="button button-primary" id="submitBtn">
           Submit Quotation Request
         </button>
-
-        <p id="message" role="status" aria-live="polite"></p>
-      </form>
-    </section>
+      </div>
+      <p class="footer-note">Please review the product specifications and customer details before submitting.</p>
+    </form>
   </main>
+
+  <template id="productTemplate">
+    <article class="product-card">
+      <div class="product-top">
+        <h3>Product</h3>
+        <button type="button" class="remove-product" aria-label="Remove product">Remove</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="field full-width">
+          <label>Product <span class="required">*</span></label>
+          <select class="product-name" required>
+            <option value="">Select product</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Specification / GSM / Type</label>
+          <input class="product-specification" placeholder="Enter specification" />
+        </div>
+        <div class="field">
+          <label>HSN Code <span class="required">*</span></label>
+          <input class="product-hsn" required placeholder="HSN code" />
+        </div>
+
+        <div class="field">
+          <label>Unit <span class="required">*</span></label>
+          <select class="product-unit" required>
+            <option value="">Select unit</option>
+            <option>Sq. Mtrs</option>
+            <option>Sq. Ft</option>
+            <option>Running Mtrs</option>
+            <option>Mtrs</option>
+            <option>Piece</option>
+            <option>Nos</option>
+            <option>Kg</option>
+            <option>Metric Ton</option>
+            <option>Roll</option>
+            <option>Sheet</option>
+            <option>Panel</option>
+            <option>Bag</option>
+            <option>Set</option>
+            <option>Bundle</option>
+            <option>Lot</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Quantity <span class="required">*</span></label>
+          <input class="product-quantity numeric-input" type="text" inputmode="decimal"
+                 required placeholder="0.00" />
+        </div>
+
+        <div class="field">
+          <label>Rate per Unit (₹) <span class="required">*</span></label>
+          <input class="product-rate numeric-input" type="text" inputmode="decimal"
+                 required placeholder="0.00" />
+        </div>
+        <div class="field">
+          <label>GST (%) <span class="required">*</span></label>
+          <input class="product-gst numeric-input" type="text" inputmode="decimal"
+                 required placeholder="5 or 18" />
+        </div>
+      </div>
+
+      <div class="product-calculation">
+        <div><span>Taxable Amount</span><strong class="product-taxable">₹0.00</strong></div>
+        <div><span>GST Amount</span><strong class="product-gst-amount">₹0.00</strong></div>
+        <div><span>Line Total</span><strong class="product-total">₹0.00</strong></div>
+      </div>
+    </article>
+  </template>
 
   <script src="script.js"></script>
 </body>
