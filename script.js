@@ -130,13 +130,15 @@ function formatDate(date = new Date()) {
   }).format(date);
 }
 
-function makeRequestId() {
-  if (window.crypto && typeof window.crypto.randomUUID === "function") {
-    return window.crypto.randomUUID();
-  }
 
-  return "KTTL-" + Date.now() + "-" +
-    Math.random().toString(36).slice(2, 9).toUpperCase();
+function makeRequestId() {
+  const now = new Date();
+
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  return `REQ-${hours}${minutes}${seconds}`;
 }
 
 function populateCountries() {
