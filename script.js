@@ -11,7 +11,7 @@
  */
 
 const WEBHOOK_URL =
-  "https://hook.eu1.make.com/fmk46trwit4ymlryita3gg3lik8wvsuc";
+  "https://hook.eu1.make.com/lwiadhje99g8lhyb3yttf8xc9a97xirt";
 
 const PRODUCT_CATALOG = [
   {
