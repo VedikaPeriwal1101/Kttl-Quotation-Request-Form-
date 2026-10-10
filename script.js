@@ -130,7 +130,6 @@ function formatDate(date = new Date()) {
   }).format(date);
 }
 
-
 function makeRequestId() {
   const now = new Date();
 
