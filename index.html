@@ -171,6 +171,18 @@
                 <textarea id="address" name="address" rows="3"
                           required placeholder="Enter complete billing address"></textarea>
               </div>
+
+              <div class="field full-width">
+                <label class="checkbox-label" for="sameAsBilling">
+                  <input type="checkbox" id="sameAsBilling" name="sameAsBilling" checked />
+                  <span>Delivery Address is same as Billing Address</span>
+                </label>
+                <div id="deliveryAddressWrap" style="margin-top: 6px;">
+                  <label for="deliveryAddress">Delivery Address <span class="required">*</span></label>
+                  <textarea id="deliveryAddress" name="deliveryAddress" rows="3"
+                            required placeholder="Enter delivery / site address" readonly></textarea>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -541,6 +553,6 @@
     </article>
   </template>
 
-<script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
