@@ -1,217 +1,471 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KTTL | Quotation Request</title>
+  <title>KTTL | Quotation & Proforma Invoice Portal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="page-shell">
-    <header class="brand-header">
-      <div class="brand-logo">
-        <img src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png" alt="KTTL logo"
-             onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block';" />
-        <span id="logoFallback" class="logo-fallback">KTTL</span>
+  <!-- Mobile Topbar -->
+  <div class="mobile-topbar">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <span style="font-weight: 700; font-size: 15px;">KTTL Portal</span>
+    <div style="width: 24px;"></div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-layout">
+    <!-- SIDE PANEL NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <img src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png" alt="KTTL Logo"
+               onerror="this.style.display='none';document.getElementById('sidebarFallback').style.display='block';" />
+          <span id="sidebarFallback" class="sidebar-logo-fallback">KTTL</span>
+        </div>
+        <div class="sidebar-title">
+          <h2>KTTL Portal</h2>
+          <p>Sales Automation</p>
+        </div>
       </div>
-      <div class="brand-copy">
-        <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
-        <h1>Quotation Request</h1>
-        <p class="subtitle">Submit customer requirements for quotation preparation.</p>
-      </div>
-    </header>
 
-    <form id="quotationForm">
-      <section class="section-card">
-        <div class="section-heading">
-          <span class="section-number">01</span>
-          <div>
-            <h2>Sales Information</h2>
-            <p>Tell us who is submitting this request.</p>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label for="salespersonName">Salesperson <span class="required">*</span></label>
-            <select id="salespersonName" name="salespersonName" required>
-              <option value="">Select salesperson</option>
-              <option>Akshay</option>
-              <option>Anuj</option>
-              <option>Dhanraj</option>
-              <option>Kongkon</option>
-              <option>Swapnil</option>
-              <option>Vijay</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="requestDate">Request Date</label>
-            <input id="requestDate" type="text" readonly />
-          </div>
-        </div>
-      </section>
-
-      <section class="section-card">
-        <div class="section-heading">
-          <span class="section-number">02</span>
-          <div>
-            <h2>Customer Information</h2>
-            <p>Enter the customer's company and contact details.</p>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <div class="field full-width">
-            <label for="companyName">Company / Customer Name <span class="required">*</span></label>
-            <input id="companyName" name="companyName" list="companyList"
-                   autocomplete="organization" required placeholder="Enter company name" />
-            <datalist id="companyList"></datalist>
-          </div>
-
-          <div class="field">
-            <label for="gstNumber">GST Number</label>
-            <input id="gstNumber" name="gstNumber" placeholder="Enter GST number" />
-          </div>
-          <div class="field">
-            <label for="contactPerson">Contact Person</label>
-            <input id="contactPerson" name="contactPerson"
-                   autocomplete="name" placeholder="Enter contact person" />
-          </div>
-
-          <div class="field">
-            <label for="customerEmail">Customer Email</label>
-            <input id="customerEmail" name="customerEmail" type="email"
-                   autocomplete="email" placeholder="name@company.com" />
-          </div>
-          <div class="field">
-            <label for="whatsappNumber">WhatsApp / Phone <span class="required">*</span></label>
-            <input id="whatsappNumber" name="whatsappNumber" type="tel"
-                   autocomplete="tel" required placeholder="Include country code if possible" />
-          </div>
-
-          <div class="field">
-            <label for="country">Country <span class="required">*</span></label>
-            <select id="country" name="country" required></select>
-          </div>
-          <div class="field">
-            <label for="state">State / Province</label>
-            <input id="state" name="state" placeholder="Enter state or province" />
-          </div>
-
-          <div class="field full-width">
-            <label for="address">Billing Address <span class="required">*</span></label>
-            <textarea id="address" name="address" rows="3"
-                      required placeholder="Enter complete billing address"></textarea>
-          </div>
-        </div>
-      </section>
-
-      <section class="section-card">
-        <div class="section-heading">
-          <span class="section-number">03</span>
-          <div>
-            <h2>Product Details</h2>
-            <p>Add one or more products. HSN and GST values fill automatically when a product is selected and remain editable.</p>
-          </div>
-        </div>
-
-        <div id="productsContainer"></div>
-        <button type="button" id="addProductBtn" class="button button-secondary">
-          + Add Another Product
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-item active" data-tab="tab-quotation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Quotation Submission</span>
         </button>
-      </section>
 
-      <section class="section-card">
-        <div class="section-heading">
-          <span class="section-number">04</span>
-          <div>
-            <h2>Quotation Terms</h2>
-            <p>Specify the commercial terms requested by the customer.</p>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label for="paymentTerms">Payment Terms <span class="required">*</span></label>
-            <select id="paymentTerms" name="paymentTerms" required>
-              <option value="">Select payment terms</option>
-              <option value="Advance">Advance</option>
-              <option value="15 Days">15 Days</option>
-              <option value="30 Days">30 Days</option>
-              <option value="45 Days">45 Days</option>
-              <option value="60 Days">60 Days</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-
-          <div class="field hidden" id="paymentTermsOtherWrap">
-            <label for="paymentTermsOther">Custom Payment Conditions <span class="required">*</span></label>
-            <input id="paymentTermsOther" name="paymentTermsOther"
-                   placeholder="Describe payment conditions" />
-          </div>
-
-          <div class="field">
-            <label for="priceValidity">Price Validity</label>
-            <input id="priceValidity" name="priceValidity"
-                   placeholder="e.g. 30 days from quotation date" />
-          </div>
-
-          <div class="field full-width">
-            <label for="pricingTerms">Pricing / Delivery Terms</label>
-            <textarea id="pricingTerms" name="pricingTerms" rows="2"
-                      placeholder="e.g. Ex-works, freight extra, delivery timeline"></textarea>
-          </div>
-
-          <div class="field full-width">
-            <label for="remarks">Additional Remarks</label>
-            <textarea id="remarks" name="remarks" rows="3"
-                      placeholder="Any special requirements or instructions"></textarea>
-          </div>
-        </div>
-      </section>
-
-      <section class="section-card totals-card">
-        <div class="section-heading">
-          <span class="section-number">05</span>
-          <div>
-            <h2>Quotation Summary</h2>
-            <p>Totals update automatically as you edit the product details.</p>
-          </div>
-        </div>
-
-        <div class="totals-panel">
-          <div class="total-row">
-            <span>Taxable Subtotal</span>
-            <strong id="subtotal">₹0.00</strong>
-          </div>
-          <div class="total-row">
-            <span>Total GST</span>
-            <strong id="gstTotal">₹0.00</strong>
-          </div>
-          <div class="total-row grand-total">
-            <span>Grand Total (Rounded)</span>
-            <strong id="grandTotal">₹0</strong>
-          </div>
-          <p class="rounding-note">Grand total is rounded automatically to the nearest rupee.</p>
-          <div class="amount-words">
-            <span>Amount in Words</span>
-            <strong id="amountInWords">Rupees Zero Only</strong>
-          </div>
-        </div>
-      </section>
-
-      <div id="message" class="message" role="status" aria-live="polite"></div>
-
-      <div class="form-actions">
-        <button type="reset" class="button button-outline" id="resetBtn">Clear Form</button>
-        <button type="submit" class="button button-primary" id="submitBtn">
-          Submit Quotation Request
+        <button type="button" class="nav-item" data-tab="tab-proforma">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+            <path d="M7 15h2"></path>
+            <path d="M15 15h2"></path>
+          </svg>
+          <span>Proforma Invoice (PI)</span>
         </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        Khator Technical Textile Ltd.<br>
+        Quotation & PI System v2.0
       </div>
-      <p class="footer-note">Please review the product specifications and customer details before submitting.</p>
-    </form>
-  </main>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="main-content">
+
+      <!-- ======================================================= -->
+      <!-- TAB 1: QUOTATION SUBMISSION                             -->
+      <!-- ======================================================= -->
+      <div id="tab-quotation" class="tab-pane">
+        <header class="brand-header">
+          <div class="brand-logo">
+            <img src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png" alt="KTTL logo"
+                 onerror="this.style.display='none';document.getElementById('logoFallback1').style.display='block';" />
+            <span id="logoFallback1" class="logo-fallback">KTTL</span>
+          </div>
+          <div class="brand-copy">
+            <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
+            <h1>Quotation Request</h1>
+            <p class="subtitle">Submit customer requirements for quotation preparation.</p>
+          </div>
+        </header>
+
+        <form id="quotationForm">
+          <section class="section-card">
+            <div class="section-heading">
+              <span class="section-number">01</span>
+              <div>
+                <h2>Sales Information</h2>
+                <p>Tell us who is submitting this request.</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="salespersonName">Salesperson <span class="required">*</span></label>
+                <select id="salespersonName" name="salespersonName" required>
+                  <option value="">Select salesperson</option>
+                  <option>Akshay</option>
+                  <option>Anuj</option>
+                  <option>Dhanraj</option>
+                  <option>Kongkon</option>
+                  <option>Swapnil</option>
+                  <option>Vijay</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="requestDate">Request Date</label>
+                <input id="requestDate" type="text" readonly />
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-heading">
+              <span class="section-number">02</span>
+              <div>
+                <h2>Customer Information</h2>
+                <p>Enter the customer's company and contact details.</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field full-width">
+                <label for="companyName">Company / Customer Name <span class="required">*</span></label>
+                <input id="companyName" name="companyName" list="companyList"
+                       autocomplete="organization" required placeholder="Enter company name" />
+                <datalist id="companyList"></datalist>
+              </div>
+
+              <div class="field">
+                <label for="gstNumber">GST Number</label>
+                <input id="gstNumber" name="gstNumber" placeholder="Enter GST number" />
+              </div>
+              <div class="field">
+                <label for="contactPerson">Contact Person</label>
+                <input id="contactPerson" name="contactPerson"
+                       autocomplete="name" placeholder="Enter contact person" />
+              </div>
+
+              <div class="field">
+                <label for="customerEmail">Customer Email</label>
+                <input id="customerEmail" name="customerEmail" type="email"
+                       autocomplete="email" placeholder="name@company.com" />
+              </div>
+              <div class="field">
+                <label for="whatsappNumber">WhatsApp / Phone <span class="required">*</span></label>
+                <input id="whatsappNumber" name="whatsappNumber" type="tel"
+                       autocomplete="tel" required placeholder="Include country code if possible" />
+              </div>
+
+              <div class="field">
+                <label for="country">Country <span class="required">*</span></label>
+                <select id="country" name="country" required></select>
+              </div>
+              <div class="field">
+                <label for="state">State / Province</label>
+                <input id="state" name="state" placeholder="Enter state or province" />
+              </div>
+
+              <div class="field full-width">
+                <label for="address">Billing Address <span class="required">*</span></label>
+                <textarea id="address" name="address" rows="3"
+                          required placeholder="Enter complete billing address"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-heading">
+              <span class="section-number">03</span>
+              <div>
+                <h2>Product Details</h2>
+                <p>Add one or more products. HSN and GST values fill automatically when a product is selected and remain editable.</p>
+              </div>
+            </div>
+
+            <div id="productsContainer"></div>
+            <button type="button" id="addProductBtn" class="button button-secondary">
+              + Add Another Product
+            </button>
+          </section>
+
+          <section class="section-card">
+            <div class="section-heading">
+              <span class="section-number">04</span>
+              <div>
+                <h2>Quotation Terms</h2>
+                <p>Specify the commercial terms requested by the customer.</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="paymentTerms">Payment Terms <span class="required">*</span></label>
+                <select id="paymentTerms" name="paymentTerms" required>
+                  <option value="">Select payment terms</option>
+                  <option value="Advance">Advance</option>
+                  <option value="15 Days">15 Days</option>
+                  <option value="30 Days">30 Days</option>
+                  <option value="45 Days">45 Days</option>
+                  <option value="60 Days">60 Days</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div class="field hidden" id="paymentTermsOtherWrap">
+                <label for="paymentTermsOther">Custom Payment Conditions <span class="required">*</span></label>
+                <input id="paymentTermsOther" name="paymentTermsOther"
+                       placeholder="Describe payment conditions" />
+              </div>
+
+              <div class="field">
+                <label for="priceValidity">Price Validity</label>
+                <input id="priceValidity" name="priceValidity"
+                       placeholder="e.g. 30 days from quotation date" />
+              </div>
+
+              <div class="field full-width">
+                <label for="pricingTerms">Pricing / Delivery Terms</label>
+                <textarea id="pricingTerms" name="pricingTerms" rows="2"
+                          placeholder="e.g. Ex-works, freight extra, delivery timeline"></textarea>
+              </div>
+
+              <div class="field full-width">
+                <label for="remarks">Additional Remarks</label>
+                <textarea id="remarks" name="remarks" rows="3"
+                          placeholder="Any special requirements or instructions"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card totals-card">
+            <div class="section-heading">
+              <span class="section-number">05</span>
+              <div>
+                <h2>Quotation Summary</h2>
+                <p>Totals update automatically as you edit the product details.</p>
+              </div>
+            </div>
+
+            <div class="totals-panel">
+              <div class="total-row">
+                <span>Taxable Subtotal</span>
+                <strong id="subtotal">₹0.00</strong>
+              </div>
+              <div class="total-row">
+                <span>Total GST</span>
+                <strong id="gstTotal">₹0.00</strong>
+              </div>
+              <div class="total-row grand-total">
+                <span>Grand Total (Rounded)</span>
+                <strong id="grandTotal">₹0</strong>
+              </div>
+              <p class="rounding-note">Grand total is rounded automatically to the nearest rupee.</p>
+              <div class="amount-words">
+                <span>Amount in Words</span>
+                <strong id="amountInWords">Rupees Zero Only</strong>
+              </div>
+            </div>
+          </section>
+
+          <div id="message" class="message" role="status" aria-live="polite"></div>
+
+          <div class="form-actions">
+            <button type="reset" class="button button-outline" id="resetBtn">Clear Form</button>
+            <button type="submit" class="button button-primary" id="submitBtn">
+              Submit Quotation Request
+            </button>
+          </div>
+          <p class="footer-note">Please review the product specifications and customer details before submitting.</p>
+        </form>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- TAB 2: PROFORMA INVOICE (PI) GENERATION                 -->
+      <!-- ======================================================= -->
+      <div id="tab-proforma" class="tab-pane hidden">
+        <header class="brand-header">
+          <div class="brand-logo">
+            <img src="e09a942d-3134-4c03-be72-b4c5d6a0acbb.png" alt="KTTL logo"
+                 onerror="this.style.display='none';document.getElementById('logoFallback2').style.display='block';" />
+            <span id="logoFallback2" class="logo-fallback">KTTL</span>
+          </div>
+          <div class="brand-copy">
+            <p class="eyebrow">KHATOR TECHNICAL TEXTILE LIMITED</p>
+            <h1>Proforma Invoice (PI)</h1>
+            <p class="subtitle">Search approved quotations, attach PO details, and generate the Proforma Invoice.</p>
+          </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="section-card">
+          <div class="section-heading">
+            <span class="section-number">01</span>
+            <div>
+              <h2>Find Quotation</h2>
+              <p>Type a Company Name to list all its quotations in descending date order, or enter an exact Quotation Number.</p>
+            </div>
+          </div>
+
+          <div class="search-box-wrapper">
+            <div class="search-input-group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="piSearchInput" placeholder="Enter Company Name or Quotation # (e.g., REQ-191026...)" autocomplete="off" />
+              <button type="button" class="search-clear-btn hidden" id="piSearchClear">&times;</button>
+            </div>
+          </div>
+
+          <div id="piSearchStatus" class="message info hidden"></div>
+
+          <!-- Matching Quotations List -->
+          <div id="quotationsListContainer" class="quotations-list hidden"></div>
+        </section>
+
+        <!-- Selected Quotation Review & PO Entry Form -->
+        <div id="piFormWrapper" class="hidden">
+          <!-- Quotation Details Banner -->
+          <section class="section-card">
+            <div class="section-heading">
+              <span class="section-number">02</span>
+              <div>
+                <h2>Quotation Details</h2>
+                <p>Verify customer quotation details before issuing the Proforma Invoice.</p>
+              </div>
+            </div>
+
+            <div class="quotation-detail-banner" id="piSelectedQuotationBanner"></div>
+
+            <!-- Products Summary Table -->
+            <div style="overflow-x: auto;">
+              <table class="pi-table" id="piProductsTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Product & Specification</th>
+                    <th>HSN</th>
+                    <th>Unit</th>
+                    <th>Qty</th>
+                    <th>Rate (₹)</th>
+                    <th>GST (%)</th>
+                    <th>Total (₹)</th>
+                  </tr>
+                </thead>
+                <tbody id="piProductsTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="totals-panel" style="margin-top: 18px;">
+              <div class="total-row">
+                <span>Taxable Subtotal</span>
+                <strong id="piSubtotal">₹0.00</strong>
+              </div>
+              <div class="total-row">
+                <span>Total GST</span>
+                <strong id="piGstTotal">₹0.00</strong>
+              </div>
+              <div class="total-row grand-total">
+                <span>Grand Total (Rounded)</span>
+                <strong id="piGrandTotal">₹0</strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- PO & Proforma Invoice Details -->
+          <form id="proformaInvoiceForm">
+            <section class="section-card">
+              <div class="section-heading">
+                <span class="section-number">03</span>
+                <div>
+                  <h2>Purchase Order (PO) Details</h2>
+                  <p>Enter the customer's purchase order reference and dates.</p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="poNumber">PO Number <span class="required">*</span></label>
+                  <input id="poNumber" name="poNumber" required placeholder="Enter customer PO number" />
+                </div>
+                <div class="field">
+                  <label for="poDate">PO Date <span class="required">*</span></label>
+                  <input id="poDate" name="poDate" type="date" required />
+                </div>
+              </div>
+            </section>
+
+            <section class="section-card">
+              <div class="section-heading">
+                <span class="section-number">04</span>
+                <div>
+                  <h2>Addresses</h2>
+                  <p>Confirm billing and delivery locations.</p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field full-width">
+                  <label for="piBillingAddress">Billing Address <span class="required">*</span></label>
+                  <textarea id="piBillingAddress" name="piBillingAddress" rows="3" required placeholder="Billing address"></textarea>
+                </div>
+
+                <div class="field full-width">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="sameAsBillingCheckbox" checked />
+                    <span>Delivery Address is same as Billing Address</span>
+                  </label>
+                  <label for="piDeliveryAddress">Delivery Address <span class="required">*</span></label>
+                  <textarea id="piDeliveryAddress" name="piDeliveryAddress" rows="3" required placeholder="Delivery address"></textarea>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-card">
+              <div class="section-heading">
+                <span class="section-number">05</span>
+                <div>
+                  <h2>Bank Details</h2>
+                  <p>Pre-filled with KTTL bank details for proforma generation. Editable if necessary.</p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field full-width">
+                  <label for="bankBeneficiary">Beneficiary Account Name <span class="required">*</span></label>
+                  <input id="bankBeneficiary" name="bankBeneficiary" required value="KHATOR TECHNICAL TEXTILE LIMITED" />
+                </div>
+                <div class="field">
+                  <label for="bankName">Bank Name <span class="required">*</span></label>
+                  <input id="bankName" name="bankName" required value="State Bank of India" />
+                </div>
+                <div class="field">
+                  <label for="bankAccountNumber">Account Number <span class="required">*</span></label>
+                  <input id="bankAccountNumber" name="bankAccountNumber" required value="38291029384" />
+                </div>
+                <div class="field">
+                  <label for="bankIfsc">IFSC Code <span class="required">*</span></label>
+                  <input id="bankIfsc" name="bankIfsc" required value="SBIN0001234" />
+                </div>
+                <div class="field">
+                  <label for="bankBranch">Branch <span class="required">*</span></label>
+                  <input id="bankBranch" name="bankBranch" required value="Surat Main Branch" />
+                </div>
+              </div>
+            </section>
+
+            <div id="piMessage" class="message" role="status" aria-live="polite"></div>
+
+            <div class="form-actions">
+              <button type="submit" class="button button-primary" id="piSubmitBtn">
+                Generate & Save Proforma Invoice
+              </button>
+            </div>
+            <p class="footer-note">The Proforma Invoice record will be synced to your Google Sheet / Make automation.</p>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
 
   <template id="productTemplate">
     <article class="product-card">
