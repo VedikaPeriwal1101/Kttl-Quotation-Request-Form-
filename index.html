@@ -144,23 +144,26 @@
               </div>
 
               <div class="field">
-                <label for="customerEmail">Customer Email</label>
-                <input id="customerEmail" name="customerEmail" type="email"
-                       autocomplete="email" placeholder="name@company.com" />
-              </div>
-              <div class="field">
-                <label for="whatsappNumber">WhatsApp / Phone <span class="required">*</span></label>
-                <input id="whatsappNumber" name="whatsappNumber" type="tel"
-                       autocomplete="tel" required placeholder="Include country code if possible" />
-              </div>
-
-              <div class="field">
                 <label for="country">Country <span class="required">*</span></label>
                 <select id="country" name="country" required></select>
               </div>
               <div class="field">
                 <label for="state">State / Province</label>
                 <input id="state" name="state" placeholder="Enter state or province" />
+              </div>
+
+              <div class="field">
+                <label for="customerEmail">Customer Email</label>
+                <input id="customerEmail" name="customerEmail" type="email"
+                       autocomplete="email" placeholder="name@company.com" />
+              </div>
+              <div class="field">
+                <label for="whatsappNumber">WhatsApp / Phone <span class="required">*</span></label>
+                <div class="phone-input-group">
+                  <select id="countryDialCode" class="country-code-select" aria-label="Country Dial Code"></select>
+                  <input id="whatsappNumber" name="whatsappNumber" type="tel"
+                         autocomplete="tel" required placeholder="Phone number" />
+                </div>
               </div>
 
               <div class="field full-width">
