@@ -72,6 +72,10 @@ const messageBox = document.getElementById("message");
 const submitBtn = document.getElementById("submitBtn");
 const countrySelect = document.getElementById("country");
 const countryDialCode = document.getElementById("countryDialCode");
+const billingAddressInput = document.getElementById("address");
+const sameAsBilling = document.getElementById("sameAsBilling");
+const deliveryAddressInput = document.getElementById("deliveryAddress");
+const deliveryAddressWrap = document.getElementById("deliveryAddressWrap");
 
 // UI Elements - Proforma Invoice
 const piSearchInput = document.getElementById("piSearchInput");
@@ -108,6 +112,8 @@ const SAMPLE_QUOTATIONS = [
       companyName: "Larsen & Toubro Ltd",
       gstNumber: "27AAACL0012P1ZV",
       address: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      billingAddress: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      deliveryAddress: "NH-48 Highway Project Site, Package 2, Vadodara Expressway, Gujarat 390001",
       state: "Maharashtra",
       country: "India",
       contactPerson: "Rajesh Sharma",
@@ -162,6 +168,8 @@ const SAMPLE_QUOTATIONS = [
       companyName: "Larsen & Toubro Ltd",
       gstNumber: "27AAACL0012P1ZV",
       address: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      billingAddress: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      deliveryAddress: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
       state: "Maharashtra",
       country: "India",
       contactPerson: "Rajesh Sharma",
@@ -197,6 +205,8 @@ const SAMPLE_QUOTATIONS = [
       companyName: "Larsen & Toubro Ltd",
       gstNumber: "27AAACL0012P1ZV",
       address: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      billingAddress: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
+      deliveryAddress: "Gate No. 5, Powai Campus, Saki Vihar Road, Mumbai, Maharashtra 400072",
       state: "Maharashtra",
       country: "India",
       contactPerson: "Amit Verma",
@@ -232,6 +242,8 @@ const SAMPLE_QUOTATIONS = [
       companyName: "Dilip Buildcon Limited",
       gstNumber: "23AABCD1234F1Z8",
       address: "Plot No. 5, Inside Govind Narayan Singh Colony, Chuna Bhatti, Kolar Road, Bhopal 462016",
+      billingAddress: "Plot No. 5, Inside Govind Narayan Singh Colony, Chuna Bhatti, Kolar Road, Bhopal 462016",
+      deliveryAddress: "EPC Highway Project Site, NH-75, Rewa-Sidhi Road, Madhya Pradesh 486001",
       state: "Madhya Pradesh",
       country: "India",
       contactPerson: "Sunil Patidar",
@@ -592,6 +604,35 @@ function populateCountries() {
   }
 }
 
+function setupAddressSync() {
+  if (!sameAsBilling || !deliveryAddressInput || !billingAddressInput) return;
+
+  const syncDelivery = () => {
+    if (sameAsBilling.checked) {
+      deliveryAddressInput.value = billingAddressInput.value;
+      deliveryAddressInput.readOnly = true;
+    } else {
+      deliveryAddressInput.readOnly = false;
+    }
+  };
+
+  sameAsBilling.addEventListener("change", () => {
+    syncDelivery();
+    if (!sameAsBilling.checked) {
+      deliveryAddressInput.focus();
+    }
+  });
+
+  billingAddressInput.addEventListener("input", () => {
+    if (sameAsBilling.checked) {
+      deliveryAddressInput.value = billingAddressInput.value;
+    }
+  });
+
+  // Initial sync
+  syncDelivery();
+}
+
 function populateProductOptions(select) {
   PRODUCT_CATALOG.forEach((product) => {
     const option = document.createElement("option");
@@ -850,6 +891,7 @@ function validateForm() {
 
   const companyName = document.getElementById("companyName").value.trim();
   const phone = document.getElementById("whatsappNumber").value.trim();
+  const billing = document.getElementById("address").value.trim();
 
   if (!companyName) {
     showMessage("Please enter the customer or company name.", "error");
@@ -859,6 +901,20 @@ function validateForm() {
   if (!digitsOnly || digitsOnly.length < 5) {
     showMessage("Please enter a valid customer phone or WhatsApp number.", "error");
     document.getElementById("whatsappNumber").focus();
+    return false;
+  }
+
+  if (!billing) {
+    showMessage("Please enter the billing address.", "error");
+    document.getElementById("address").focus();
+    return false;
+  }
+
+  const isSame = sameAsBilling ? sameAsBilling.checked : true;
+  const delivery = document.getElementById("deliveryAddress") ? document.getElementById("deliveryAddress").value.trim() : "";
+  if (!isSame && !delivery) {
+    showMessage("Please enter the delivery address or check 'Delivery Address is same as Billing Address'.", "error");
+    document.getElementById("deliveryAddress").focus();
     return false;
   }
 
@@ -885,11 +941,19 @@ function buildPayload() {
   }
   const fullWhatsAppNumber = `${dialCode} ${subscriber}`.trim();
 
+  const billingAddress = document.getElementById("address").value.trim();
+  const isSameAddress = sameAsBilling ? sameAsBilling.checked : true;
+  const deliveryAddressVal = document.getElementById("deliveryAddress") ? document.getElementById("deliveryAddress").value.trim() : "";
+  const deliveryAddress = isSameAddress ? billingAddress : (deliveryAddressVal || billingAddress);
+
   const salesperson = document.getElementById("salespersonName").value.trim();
   const customer = {
     companyName: document.getElementById("companyName").value.trim(),
     gstNumber: document.getElementById("gstNumber").value.trim(),
-    address: document.getElementById("address").value.trim(),
+    address: billingAddress,
+    billingAddress: billingAddress,
+    deliveryAddress: deliveryAddress,
+    sameAsBilling: isSameAddress,
     state: document.getElementById("state").value.trim(),
     country: countrySelect.value,
     contactPerson: document.getElementById("contactPerson").value.trim(),
@@ -970,6 +1034,11 @@ async function submitQuotationRequest(event) {
     setCountrySelectByCode("IN");
     if (countryDialCode) setDialCodeSelect("+91", "IN");
     updatePhonePlaceholder("+91");
+    if (sameAsBilling) sameAsBilling.checked = true;
+    if (deliveryAddressInput) {
+      deliveryAddressInput.value = "";
+      deliveryAddressInput.readOnly = true;
+    }
     document.getElementById("requestDate").value = formatDate();
     paymentTermsOtherWrap.classList.add("hidden");
     paymentTermsOther.required = false;
@@ -1013,6 +1082,13 @@ function resetForm() {
     const phoneInput = document.getElementById("whatsappNumber");
     if (phoneInput) {
       phoneInput.value = "";
+    }
+    if (sameAsBilling) {
+      sameAsBilling.checked = true;
+    }
+    if (deliveryAddressInput) {
+      deliveryAddressInput.value = "";
+      deliveryAddressInput.readOnly = true;
     }
     document.getElementById("requestDate").value = formatDate();
     paymentTermsOtherWrap.classList.add("hidden");
@@ -1232,11 +1308,17 @@ function selectQuotationForPI(quotation) {
 
   // Pre-fill PO & PI fields
   poNumberInput.value = "";
-  poDateInput.value = new Date().toISOString().split("T")[0]; // today's date
-  piBillingAddress.value = quotation.customer?.address || "";
-  piDeliveryAddress.value = quotation.customer?.address || "";
-  sameAsBillingCheckbox.checked = true;
-  piDeliveryAddress.readOnly = true;
+  const billingAddr = quotation.customer?.billingAddress || quotation.customer?.address || "";
+  const deliveryAddr = quotation.customer?.deliveryAddress || quotation.customer?.address || billingAddr;
+  piBillingAddress.value = billingAddr;
+  piDeliveryAddress.value = deliveryAddr;
+  if (deliveryAddr && billingAddr && deliveryAddr !== billingAddr) {
+    sameAsBillingCheckbox.checked = false;
+    piDeliveryAddress.readOnly = false;
+  } else {
+    sameAsBillingCheckbox.checked = true;
+    piDeliveryAddress.readOnly = true;
+  }
 
   // Clear message
   piMessage.textContent = "";
@@ -1320,6 +1402,7 @@ async function submitProformaInvoice(event) {
 function init() {
   setupNavigation();
   populateCountries();
+  setupAddressSync();
 
   document.getElementById("requestDate").value = formatDate();
 
