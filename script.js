@@ -365,68 +365,126 @@ function setupNavigation() {
 // -------------------------------------------------------------
 // TAB 1: QUOTATION SUBMISSION LOGIC
 // -------------------------------------------------------------
-const COUNTRY_DIALING_DATA = [
-  { code: "IN", name: "India", dial: "+91" },
-  { code: "AE", name: "United Arab Emirates", dial: "+971" },
-  { code: "US", name: "United States", dial: "+1" },
-  { code: "GB", name: "United Kingdom", dial: "+44" },
-  { code: "SA", name: "Saudi Arabia", dial: "+966" },
-  { code: "QA", name: "Qatar", dial: "+974" },
-  { code: "OM", name: "Oman", dial: "+968" },
-  { code: "KW", name: "Kuwait", dial: "+965" },
-  { code: "BH", name: "Bahrain", dial: "+973" },
-  { code: "SG", name: "Singapore", dial: "+65" },
-  { code: "AU", name: "Australia", dial: "+61" },
-  { code: "CA", name: "Canada", dial: "+1" },
-  { code: "DE", name: "Germany", dial: "+49" },
-  { code: "FR", name: "France", dial: "+33" },
-  { code: "IT", name: "Italy", dial: "+39" },
-  { code: "ES", name: "Spain", dial: "+34" },
-  { code: "NL", name: "Netherlands", dial: "+31" },
-  { code: "CH", name: "Switzerland", dial: "+41" },
-  { code: "BD", name: "Bangladesh", dial: "+880" },
-  { code: "NP", name: "Nepal", dial: "+977" },
-  { code: "LK", name: "Sri Lanka", dial: "+94" },
-  { code: "BT", name: "Bhutan", dial: "+975" },
-  { code: "MY", name: "Malaysia", dial: "+60" },
-  { code: "ID", name: "Indonesia", dial: "+62" },
-  { code: "TH", name: "Thailand", dial: "+66" },
-  { code: "VN", name: "Vietnam", dial: "+84" },
-  { code: "PH", name: "Philippines", dial: "+63" },
-  { code: "ZA", name: "South Africa", dial: "+27" },
-  { code: "KE", name: "Kenya", dial: "+254" },
-  { code: "NG", name: "Nigeria", dial: "+234" },
-  { code: "EG", name: "Egypt", dial: "+20" },
-  { code: "RU", name: "Russia", dial: "+7" },
-  { code: "CN", name: "China", dial: "+86" },
-  { code: "JP", name: "Japan", dial: "+81" },
-  { code: "KR", name: "South Korea", dial: "+82" },
-  { code: "BR", name: "Brazil", dial: "+55" },
-  { code: "MX", name: "Mexico", dial: "+52" },
-  { code: "NZ", name: "New Zealand", dial: "+64" },
-  { code: "TR", name: "Turkey", dial: "+90" },
-  { code: "IL", name: "Israel", dial: "+972" }
+const DIAL_CODE_ENTRIES = [
+  { code: "IN", name: "India", dial: "+91", digits: "91" },
+  { code: "AE", name: "United Arab Emirates", dial: "+971", digits: "971" },
+  { code: "US", name: "United States", dial: "+1", digits: "1" },
+  { code: "GB", name: "United Kingdom", dial: "+44", digits: "44" },
+  { code: "SA", name: "Saudi Arabia", dial: "+966", digits: "966" },
+  { code: "QA", name: "Qatar", dial: "+974", digits: "974" },
+  { code: "OM", name: "Oman", dial: "+968", digits: "968" },
+  { code: "KW", name: "Kuwait", dial: "+965", digits: "965" },
+  { code: "BH", name: "Bahrain", dial: "+973", digits: "973" },
+  { code: "SG", name: "Singapore", dial: "+65", digits: "65" },
+  { code: "AU", name: "Australia", dial: "+61", digits: "61" },
+  { code: "CA", name: "Canada", dial: "+1", digits: "1" },
+  { code: "DE", name: "Germany", dial: "+49", digits: "49" },
+  { code: "FR", name: "France", dial: "+33", digits: "33" },
+  { code: "IT", name: "Italy", dial: "+39", digits: "39" },
+  { code: "ES", name: "Spain", dial: "+34", digits: "34" },
+  { code: "NL", name: "Netherlands", dial: "+31", digits: "31" },
+  { code: "CH", name: "Switzerland", dial: "+41", digits: "41" },
+  { code: "BD", name: "Bangladesh", dial: "+880", digits: "880" },
+  { code: "NP", name: "Nepal", dial: "+977", digits: "977" },
+  { code: "LK", name: "Sri Lanka", dial: "+94", digits: "94" },
+  { code: "BT", name: "Bhutan", dial: "+975", digits: "975" },
+  { code: "MY", name: "Malaysia", dial: "+60", digits: "60" },
+  { code: "ID", name: "Indonesia", dial: "+62", digits: "62" },
+  { code: "TH", name: "Thailand", dial: "+66", digits: "66" },
+  { code: "VN", name: "Vietnam", dial: "+84", digits: "84" },
+  { code: "PH", name: "Philippines", dial: "+63", digits: "63" },
+  { code: "ZA", name: "South Africa", dial: "+27", digits: "27" },
+  { code: "KE", name: "Kenya", dial: "+254", digits: "254" },
+  { code: "NG", name: "Nigeria", dial: "+234", digits: "234" },
+  { code: "EG", name: "Egypt", dial: "+20", digits: "20" },
+  { code: "RU", name: "Russia", dial: "+7", digits: "7" },
+  { code: "CN", name: "China", dial: "+86", digits: "86" },
+  { code: "JP", name: "Japan", dial: "+81", digits: "81" },
+  { code: "KR", name: "South Korea", dial: "+82", digits: "82" },
+  { code: "BR", name: "Brazil", dial: "+55", digits: "55" },
+  { code: "MX", name: "Mexico", dial: "+52", digits: "52" },
+  { code: "NZ", name: "New Zealand", dial: "+64", digits: "64" },
+  { code: "TR", name: "Turkey", dial: "+90", digits: "90" },
+  { code: "IL", name: "Israel", dial: "+972", digits: "972" }
 ];
 
-function getDialCodeForCountryName(countryName) {
-  if (!countryName) return "+91";
-  const normalized = countryName.toLowerCase().trim();
-  if (normalized.includes("india")) return "+91";
-  if (normalized.includes("emirates") || normalized === "uae") return "+971";
-  if (normalized.includes("united states") || normalized === "usa" || normalized === "us") return "+1";
-  if (normalized.includes("united kingdom") || normalized === "uk" || normalized === "great britain") return "+44";
+function findDialEntryByCountry(countryStr) {
+  if (!countryStr) return DIAL_CODE_ENTRIES[0];
+  const norm = countryStr.toLowerCase().trim();
+  if (norm.includes("india")) return DIAL_CODE_ENTRIES.find(e => e.code === "IN");
+  if (norm.includes("emirates") || norm === "uae") return DIAL_CODE_ENTRIES.find(e => e.code === "AE");
+  if (norm.includes("united states") || norm === "usa" || norm === "us") return DIAL_CODE_ENTRIES.find(e => e.code === "US");
+  if (norm.includes("united kingdom") || norm === "uk" || norm === "great britain") return DIAL_CODE_ENTRIES.find(e => e.code === "GB");
   
-  const found = COUNTRY_DIALING_DATA.find(c => 
-    c.name.toLowerCase() === normalized || 
-    normalized.includes(c.name.toLowerCase()) || 
-    c.code.toLowerCase() === normalized
-  );
-  return found ? found.dial : "+91";
+  return DIAL_CODE_ENTRIES.find(e => 
+    e.name.toLowerCase() === norm ||
+    norm.includes(e.name.toLowerCase()) ||
+    e.code.toLowerCase() === norm
+  ) || DIAL_CODE_ENTRIES[0];
 }
 
-function getCountryNameForDialCode(dialCode) {
-  const found = COUNTRY_DIALING_DATA.find(c => c.dial === dialCode);
-  return found ? found.name : null;
+function findDialEntryByNumber(numberStr) {
+  if (!numberStr) return null;
+  const cleaned = numberStr.replace(/[\s\-\(\)]/g, "");
+  const sorted = [...DIAL_CODE_ENTRIES].sort((a, b) => b.dial.length - a.dial.length);
+  
+  if (cleaned.startsWith("+")) {
+    return sorted.find(e => cleaned.startsWith(e.dial));
+  }
+  if (cleaned.length >= 2) {
+    return sorted.find(e => cleaned.startsWith(e.digits) && e.digits.length >= 2);
+  }
+  return null;
+}
+
+function selectCountryOption(countryNameOrCode) {
+  if (!countrySelect || !countryNameOrCode) return;
+  const target = countryNameOrCode.toLowerCase().trim();
+  for (let i = 0; i < countrySelect.options.length; i++) {
+    const opt = countrySelect.options[i];
+    const val = opt.value.toLowerCase().trim();
+    const code = (opt.dataset.code || "").toLowerCase().trim();
+    if (val === target || code === target || val.includes(target) || (target.length > 3 && target.includes(val))) {
+      countrySelect.selectedIndex = i;
+      return;
+    }
+  }
+}
+
+function selectDialCodeOption(dialCode) {
+  if (!countryDialCode || !dialCode) return;
+  for (let i = 0; i < countryDialCode.options.length; i++) {
+    if (countryDialCode.options[i].value === dialCode) {
+      countryDialCode.selectedIndex = i;
+      return;
+    }
+  }
+}
+
+function updatePhoneInputPrefix(newDial) {
+  const phoneInput = document.getElementById("whatsappNumber");
+  if (!phoneInput) return;
+  
+  let currentVal = phoneInput.value.trim();
+  if (!currentVal) {
+    phoneInput.value = `${newDial} `;
+    phoneInput.placeholder = `${newDial} 98765 43210`;
+    return;
+  }
+  
+  const existing = findDialEntryByNumber(currentVal);
+  if (existing) {
+    if (currentVal.startsWith(existing.dial)) {
+      currentVal = currentVal.slice(existing.dial.length).trim();
+    } else if (currentVal.startsWith(existing.digits)) {
+      currentVal = currentVal.slice(existing.digits.length).trim();
+    }
+  } else if (currentVal.startsWith("+")) {
+    currentVal = currentVal.replace(/^\+\d+\s*/, "");
+  }
+  
+  phoneInput.value = currentVal ? `${newDial} ${currentVal}` : `${newDial} `;
+  phoneInput.placeholder = `${newDial} 98765 43210`;
 }
 
 function populateCountries() {
@@ -461,8 +519,8 @@ function populateCountries() {
     
     // Primary calling codes first (India, UAE, US, UK, Middle East, etc.)
     const primaryCodes = ["IN", "AE", "US", "GB", "SA", "QA", "OM", "KW", "SG", "AU", "CA", "DE"];
-    const popularList = COUNTRY_DIALING_DATA.filter(c => primaryCodes.includes(c.code));
-    const othersList = COUNTRY_DIALING_DATA.filter(c => !primaryCodes.includes(c.code))
+    const popularList = DIAL_CODE_ENTRIES.filter(c => primaryCodes.includes(c.code));
+    const othersList = DIAL_CODE_ENTRIES.filter(c => !primaryCodes.includes(c.code))
       .sort((a, b) => a.name.localeCompare(b.name));
 
     const allDialData = [...popularList, ...othersList];
@@ -474,39 +532,43 @@ function populateCountries() {
       countryDialCode.appendChild(opt);
     });
 
-    countryDialCode.value = "+91";
+    selectDialCodeOption("+91");
 
-    // Auto-update Dial Code when Country changes (India -> +91, UAE -> +971, US -> +1, UK -> +44, etc.)
+    // 1. When Country changes -> Auto-update dial code dropdown AND phone number input
     countrySelect.addEventListener("change", () => {
-      const dial = getDialCodeForCountryName(countrySelect.value);
-      if (dial) {
-        countryDialCode.value = dial;
+      const entry = findDialEntryByCountry(countrySelect.value);
+      if (entry) {
+        selectDialCodeOption(entry.dial);
+        updatePhoneInputPrefix(entry.dial);
       }
     });
 
-    // Auto-update Country when Dial Code changes
+    // 2. When Dial Code dropdown changes -> Auto-update Country dropdown AND phone number input
     countryDialCode.addEventListener("change", () => {
-      const countryName = getCountryNameForDialCode(countryDialCode.value);
-      if (countryName) {
-        countrySelect.value = countryName;
+      const selectedDial = countryDialCode.value;
+      const entry = DIAL_CODE_ENTRIES.find(e => e.dial === selectedDial);
+      if (entry) {
+        selectCountryOption(entry.name);
+        updatePhoneInputPrefix(selectedDial);
       }
     });
 
-    // Auto-detect typed/pasted country codes in phone field
+    // 3. Vice versa: When user types/pastes in phone field -> Auto-detect dial code & update Country
     const phoneInput = document.getElementById("whatsappNumber");
     if (phoneInput) {
+      // Set initial value to "+91 "
+      if (!phoneInput.value) {
+        phoneInput.value = "+91 ";
+        phoneInput.placeholder = "+91 98765 43210";
+      }
+
       phoneInput.addEventListener("input", () => {
-        const val = phoneInput.value.trim();
-        if (val.startsWith("+")) {
-          const matched = [...COUNTRY_DIALING_DATA]
-            .sort((a, b) => b.dial.length - a.dial.length)
-            .find(c => val.startsWith(c.dial));
-          if (matched) {
-            countryDialCode.value = matched.dial;
-            const countryName = getCountryNameForDialCode(matched.dial);
-            if (countryName) countrySelect.value = countryName;
-            phoneInput.value = val.slice(matched.dial.length).trim();
-          }
+        const raw = phoneInput.value.trim();
+        if (!raw) return;
+        const matched = findDialEntryByNumber(raw);
+        if (matched) {
+          selectDialCodeOption(matched.dial);
+          selectCountryOption(matched.name);
         }
       });
     }
@@ -776,8 +838,10 @@ function validateForm() {
     showMessage("Please enter the customer or company name.", "error");
     return false;
   }
-  if (!phone) {
-    showMessage("Please enter the customer's WhatsApp number or phone number.", "error");
+  const digitsOnly = phone.replace(/\D/g, "");
+  if (!digitsOnly || digitsOnly.length < 5) {
+    showMessage("Please enter a valid customer phone or WhatsApp number.", "error");
+    document.getElementById("whatsappNumber").focus();
     return false;
   }
 
@@ -919,7 +983,12 @@ function resetForm() {
   window.setTimeout(() => {
     clearMessage();
     countrySelect.value = "India";
-    if (countryDialCode) countryDialCode.value = "+91";
+    if (countryDialCode) selectDialCodeOption("+91");
+    const phoneInput = document.getElementById("whatsappNumber");
+    if (phoneInput) {
+      phoneInput.value = "+91 ";
+      phoneInput.placeholder = "+91 98765 43210";
+    }
     document.getElementById("requestDate").value = formatDate();
     paymentTermsOtherWrap.classList.add("hidden");
     paymentTermsOther.required = false;
