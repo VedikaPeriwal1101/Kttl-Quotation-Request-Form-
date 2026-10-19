@@ -420,10 +420,34 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--teal-glow);
 }
 
-input[readonly] {
+input[readonly],
+textarea[readonly] {
   background: #F4FAF9;
-  color: var(--muted);
-  cursor: default;
+  color: #557574;
+  cursor: not-allowed;
+}
+
+.checkbox-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: var(--teal-dark) !important;
+  margin: 2px 0 8px !important;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  accent-color: var(--teal) !important;
+  cursor: pointer;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0;
 }
 
 /* PHONE INPUT GROUP WITH COUNTRY CODE */
